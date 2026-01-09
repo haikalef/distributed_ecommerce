@@ -61,7 +61,7 @@ services:
   celery_worker:
     build: .
     container_name: distributed_ecommerce_celery_worker
-    command: celery -A app.tasks.celery_app worker --loglevel=info
+    command: celery -A app.core.celery_app worker --loglevel=info
     environment:
       DATABASE_URL: mysql+pymysql://app_user:app_password@mysql:3306/distributed_ecommerce
       REDIS_URL: redis://redis:6380

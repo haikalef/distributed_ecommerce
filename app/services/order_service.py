@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from app.models.product import Product
 from app.models.order import Order
 from app.schemas.order import OrderCreate
-from app.tasks.celery_app import 
+from app.tasks.order_tasks import process_order
 
 
 def create_order(db: Session, order_in: OrderCreate) -> Order:
@@ -37,7 +37,9 @@ def create_order(db: Session, order_in: OrderCreate) -> Order:
         db.commit()
         db.refresh(order)
 
-    send_order_task.delay(order.id)
+        # Trigger async task for order processing
+        process_order.delay(order.id)
+        
         return order
 
     except:

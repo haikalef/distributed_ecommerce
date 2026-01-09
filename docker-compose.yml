@@ -25,7 +25,7 @@ services:
     image: redis:7-alpine
     container_name: distributed_ecommerce_redis
     ports:
-      - "6379:6380"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -44,9 +44,9 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: mysql+pymysql://app_user:app_password@mysql:3306/distributed_ecommerce
-      REDIS_URL: redis://redis:6379
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      REDIS_URL: redis://redis:6380
+      CELERY_BROKER_URL: redis://redis:6380/0
+      CELERY_RESULT_BACKEND: redis://redis:6380/0
     volumes:
       - .:/app
     depends_on:
@@ -64,9 +64,9 @@ services:
     command: celery -A app.tasks.celery_app worker --loglevel=info
     environment:
       DATABASE_URL: mysql+pymysql://app_user:app_password@mysql:3306/distributed_ecommerce
-      REDIS_URL: redis://redis:6379
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      REDIS_URL: redis://redis:6380
+      CELERY_BROKER_URL: redis://redis:6380/0
+      CELERY_RESULT_BACKEND: redis://redis:6380/0
     depends_on:
       - mysql
       - redis

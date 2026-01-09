@@ -10,7 +10,7 @@ services:
       MYSQL_USER: app_user
       MYSQL_PASSWORD: app_password
     ports:
-      - "3306:3306"
+      - "3307:3306"  # Changed from 3306 to 3307 to avoid port conflict
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -19,6 +19,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
@@ -33,6 +34,7 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       timeout: 10s
       retries: 5
+    restart: unless-stopped
 
   web:
     build: .
@@ -54,6 +56,7 @@ services:
         condition: service_healthy
     networks:
       - ecommerce_network
+    restart: unless-stopped
 
   celery_worker:
     build: .
@@ -70,6 +73,7 @@ services:
       - web
     networks:
       - ecommerce_network
+    restart: unless-stopped
 
 volumes:
   mysql_data:

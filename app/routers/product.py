@@ -5,7 +5,7 @@ from app.core.database import get_db
 from app.models.product import Product
 from app.schemas.product import ProductCreate, ProductResponse
 
-router = APIRouter(prefix="/products", tags=["Products"])
+router = APIRouter(prefix="/api/v1/products", tags=["Products"])
 
 @router.post("/", response_model=ProductResponse)           #Create Product
 def create_product(payload: ProductCreate, db: Session = Depends(get_db)):

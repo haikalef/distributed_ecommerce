@@ -6,9 +6,8 @@ from app.models.order import Order
 from app.models.product import Product
 from app.schemas.order import OrderCreate, OrderResponse
 from app.services.order_service import create_order
-from app.tasks.celery_app import send_order_task
 
-router = APIRouter(prefix="/orders", tags=["Orders"])
+router = APIRouter(prefix="/api/v1/orders", tags=["Orders"])
 
 
 @router.post("/", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
@@ -24,10 +23,6 @@ def create_order_endpoint(
     attempt to purchase the last item simultaneously.
     """
     order = create_order(db, order_in)
-    
-    # Trigger Celery task for async processing
-    send_order_task.delay(order.id)
-    
     return order
 
 
